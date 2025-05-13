@@ -1,4 +1,4 @@
-FROM golang:1.21
+FROM golang:1.24
 
 # Устанавливаем зависимости
 RUN apt-get update && apt-get install -y \
@@ -7,17 +7,12 @@ RUN apt-get update && apt-get install -y \
     && pip3 install yt-dlp --break-system-packages \
     && apt-get clean
 
-# Устанавливаем рабочую директорию — корень проекта
 WORKDIR /
 
-# Копируем все файлы в контейнер
 COPY . .
 
-# Собираем Go-приложение (main.go в корне)
 RUN go build -o main main.go
 
-# Открываем порт (если ты используешь другой, измени)
 EXPOSE 8080
 
-# Запускаем приложение
 CMD ["./main"]
