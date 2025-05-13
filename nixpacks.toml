@@ -1,3 +1,6 @@
+[phases.setup]
+nixPkgs = ["go", "yt-dlp"]
+
 [build]
 builder = "nixpacks"
 buildCommand = "go build -o main ."
@@ -7,6 +10,3 @@ startCommand = "./main"
 healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicyType = "never"
-
-[packages]
-apt = ["yt-dlp", "ffmpeg"]
