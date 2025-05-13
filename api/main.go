@@ -1,23 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"io"
+	"log"
 	"net/http"
-	"net/url"
 	"os/exec"
-	"strings"
-	"time"
 )
-
-func getDirectURL(videoURL string) (string, error) {
-	cmd := exec.Command("yt-dlp", "-f", "best[ext=mp4]", "-g", videoURL)
-	output, err := cmd.Output()
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(string(output)), nil
-}
 
 func streamHandler(w http.ResponseWriter, r *http.Request) {
 	videoURL := r.URL.Query().Get("url")
@@ -26,40 +14,40 @@ func streamHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	directURL, err := getDirectURL(videoURL)
+	cmd := exec.Command("yt-dlp", "-f", "best[ext=mp4]", "-g", videoURL)
+	output, err := cmd.Output()
 	if err != nil {
-		http.Error(w, "Failed to get direct video URL", http.StatusInternalServerError)
+		http.Error(w, "Failed to fetch video URL", http.StatusInternalServerError)
+		log.Println("yt-dlp error:", err)
 		return
 	}
 
-	proxyURL, _ := url.Parse("http://localhost:3067")
+	directURL := string(output)
+	log.Println("Direct URL:", directURL)
 
-	client := &http.Client{
-		Timeout: time.Minute,
-		Transport: &http.Transport{
-			Proxy: http.ProxyURL(proxyURL),
-		},
-	}
-
-	resp, err := client.Get(directURL)
+	resp, err := http.Get(directURL)
 	if err != nil {
 		http.Error(w, "Failed to stream video", http.StatusInternalServerError)
+		log.Println("stream error:", err)
 		return
 	}
 	defer resp.Body.Close()
 
-	w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
-	w.Header().Set("Content-Length", resp.Header.Get("Content-Length"))
+	for k, v := range resp.Header {
+		for _, vv := range v {
+			w.Header().Add(k, vv)
+		}
+	}
 
-	_, _ = io.Copy(w, resp.Body)
+	w.WriteHeader(resp.StatusCode)
+	_, err = io.Copy(w, resp.Body)
+	if err != nil {
+		log.Println("stream copy error:", err)
+	}
 }
 
 func main() {
 	http.HandleFunc("/stream", streamHandler)
-
-	fmt.Println("🔗 Listening on :8080")
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		panic(err)
-	}
+	log.Println("Listening on :8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
