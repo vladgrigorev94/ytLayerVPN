@@ -5,7 +5,7 @@ nixPkgs = ["go", "yt-dlp", "ffmpeg"]
 cmds = ["go mod tidy"]
 
 [phases.build]
-cmds = ["go build -o app ."]
+cmds = ["go build -o main ."]
 
 [start]
-cmd = "./app"
+cmd = "./main"
