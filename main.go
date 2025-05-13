@@ -16,7 +16,7 @@ func streamHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Вызов yt-dlp с cookies.txt
-	cmd := exec.Command("yt-dlp", "--cookies", "cookies.txt", "--no-playlist", "-f", "best", "-g", videoURL)
+	cmd := exec.Command("yt-dlp", "--cookies", "cookies.txt", "--no-playlist", "-g", videoURL)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Printf("yt-dlp error: %v\nOutput:\n%s", err, string(output))
