@@ -1,9 +1,0 @@
-[phases.setup]
-nixPkgs = ["go", "yt-dlp"]
-
-[build]
-builder = "nixpacks"
-buildCommand = "go build -o main ."
-
-[deploy]
-startCommand = "./main"
