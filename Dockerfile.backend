@@ -1,17 +1,25 @@
-FROM golang:1.24
-
-# Устанавливаем зависимости
-RUN apt-get update && apt-get install -y \
-    python3-pip \
-    ffmpeg \
-    && pip3 install yt-dlp --break-system-packages \
-    && apt-get clean
+# Используем свежую версию Go с поддержкой go 1.24.x+
+FROM golang:1.24-bookworm AS build
 
 WORKDIR /
 
 COPY . .
 
-RUN go build -o main main.go
+RUN go build -o main .
+
+# Финальный образ
+FROM python:3.11-bookworm
+
+# Устанавливаем yt-dlp, ffmpeg и необходимые утилиты
+RUN apt-get update && \
+    apt-get install -y ffmpeg curl && \
+    pip install yt-dlp && \
+    apt-get clean
+
+# Копируем исполняемый файл и cookies.txt
+WORKDIR /
+COPY --from=build /main .
+COPY cookies.txt .
 
 EXPOSE 8080
 
