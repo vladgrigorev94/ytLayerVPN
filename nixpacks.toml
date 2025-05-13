@@ -1,5 +1,8 @@
 [phases.setup]
-nixPkgs = ['go', 'ffmpeg', 'yt-dlp', 'python3']
+nixPkgs = ["go", "ffmpeg", "yt-dlp", "python3"]
+
+[phases.build]
+cmds = ["go build -o server main.go"]
 
 [start]
-cmd = "go run main.go"
+cmd = "./server"
