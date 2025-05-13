@@ -5,11 +5,12 @@
       "phases": {
         "setup": {
           "nixPkgs": ["yt-dlp", "ffmpeg", "go"]
-        }
+        },
       }
     }
   },
   "deploy": {
+    "preDeployCommand": ["go build -o main ."],
     "startCommand": "./main",
     "restartPolicyType": "NEVER"
   }
