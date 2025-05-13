@@ -32,7 +32,7 @@ func streamHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	proxyURL, _ := url.Parse("http://localhost:3067") // 🟡 если другой порт — замени
+	proxyURL, _ := url.Parse("http://localhost:3067")
 
 	client := &http.Client{
 		Timeout: time.Minute,
@@ -48,11 +48,9 @@ func streamHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer resp.Body.Close()
 
-	// Устанавливаем заголовки
 	w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
 	w.Header().Set("Content-Length", resp.Header.Get("Content-Length"))
 
-	// Проксируем поток
 	_, _ = io.Copy(w, resp.Body)
 }
 
