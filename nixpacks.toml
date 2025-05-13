@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["go", "yt-dlp", "ffmpeg"]
+
+[phases.install]
+cmds = ["go mod tidy"]
+
+[phases.build]
+cmds = ["go build -o app ."]
+
+[start]
+cmd = "./app"
