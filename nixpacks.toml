@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ['go', 'ffmpeg', 'yt-dlp', 'python3']
+
+[start]
+cmd = "go run main.go"
