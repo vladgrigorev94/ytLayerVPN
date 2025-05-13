@@ -26,7 +26,7 @@ func streamHandler(w http.ResponseWriter, r *http.Request) {
 
 	directURL := strings.TrimSpace(string(output))
 	//directURL = strings.TrimSpace(directURL)
-	//directURL = strings.ReplaceAll(directURL, "\n", "")
+	directURL = strings.ReplaceAll(directURL, "\n", "")
 	//directURL = strings.ReplaceAll(directURL, "\t", "")
 	log.Println("Direct URL:", directURL)
 
