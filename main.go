@@ -14,11 +14,11 @@ func streamHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cmd := exec.Command("yt-dlp", "-f", "best[ext=mp4]", "-g", videoURL)
-	output, err := cmd.Output()
+	cmd := exec.Command("yt-dlp", "--no-playlist", "-f", "best", "-g", videoURL)
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		http.Error(w, "Failed to fetch video URL", http.StatusInternalServerError)
-		log.Println("yt-dlp error:", err)
+		log.Printf("yt-dlp error: %v\nOutput:\n%s", err, string(output))
+		http.Error(w, "yt-dlp failed", http.StatusInternalServerError)
 		return
 	}
 
