@@ -16,7 +16,7 @@ func streamHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Вызов yt-dlp с cookies.txt
-	cmd := exec.Command("yt-dlp", "--cookies", "cookies.txt", "--no-playlist", "-g", videoURL)
+	cmd := exec.Command("yt-dlp", "--cookies", "cookies.txt", "--no-playlist", "-f", "best[ext=mp4]", "-g", videoURL)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Printf("yt-dlp error: %v\nOutput:\n%s", err, string(output))
@@ -26,7 +26,7 @@ func streamHandler(w http.ResponseWriter, r *http.Request) {
 
 	directURL := strings.TrimSpace(string(output))
 	//directURL = strings.TrimSpace(directURL)
-	directURL = strings.ReplaceAll(directURL, "\n", "")
+	//directURL = strings.ReplaceAll(directURL, "\n", "")
 	//directURL = strings.ReplaceAll(directURL, "\t", "")
 	log.Println("Direct URL:", directURL)
 
