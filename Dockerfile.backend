@@ -1,17 +1,17 @@
 FROM golang:1.21
 
-# Установка yt-dlp и ffmpeg
+# Установка зависимостей
 RUN apt-get update && apt-get install -y \
     python3-pip \
     ffmpeg \
-    && pip3 install yt-dlp \
+    && pip3 install yt-dlp --break-system-packages \
     && apt-get clean
 
-WORKDIR /
+WORKDIR /app
 
 COPY . .
 
-RUN go build -o main .
+RUN go build -o app .
 
 EXPOSE 8080
 
