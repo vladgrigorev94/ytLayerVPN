@@ -4,10 +4,7 @@
     "nixpacksPlan": {
       "phases": {
         "setup": {
-          "nixPkgs": [
-            "yt-dlp",
-            "ffmpeg"
-          ]
+          "nixPkgs": ["yt-dlp", "ffmpeg", "go"]
         }
       }
     }
